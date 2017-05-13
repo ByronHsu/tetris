@@ -1,4 +1,4 @@
-const canvas = document.getElementById('2048tetris');
+const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
 context.scale(20,20);
 // ---------x
