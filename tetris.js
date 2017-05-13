@@ -86,7 +86,6 @@ function clean(){
                         }
                     }
                 }
-                console.log('hi')
                 //check whether it touchs right wall
                 for(let k=0;k<20;k++){
                     if(bfs[k][11]===1){
@@ -169,7 +168,6 @@ function copyBfs(){
         bfs.splice(19,1);
         bfs.unshift([0,0,0,0,0,0,0,0,0,0,0,0]);
     }
-    console.log('1');
     for(let y=0;y<20;y++){
         for(let x=0;x<12;x++){
             if(tem[y][x]!=0){
@@ -178,7 +176,6 @@ function copyBfs(){
             }
         }
     }
-    console.log('1');
     for(let y=0;y<20;y++){
         for(let x=0;x<12;x++){
             if(bfs[y][x]!=0){
@@ -187,7 +184,6 @@ function copyBfs(){
             }
         }
     }
-    console.log('1');
 }
 function drawArena(){
     context.fillStyle='#202028';
@@ -279,7 +275,7 @@ function collide(arena, now_matrix) {
     return false;
 }
 function playerRotate(dir) {
-    const tem = now_matrix.offset.x;
+    let tem = now_matrix.offset.x;
     let offset = 1;
     rotate(dir,now_matrix);
     while (collide(arena, now_matrix)) {
@@ -362,7 +358,6 @@ function merge(arena,now_matrix){
         }
     }
 }
-
 let now_matrix;
 let arena=[],visit=[],bfs=[];
 function gameStart(){
@@ -378,6 +373,7 @@ function gameStart(){
         }
     }
     gameReset();
+    update();
 }
 let resetcnt=0;
 function gameReset(){
@@ -385,11 +381,10 @@ function gameReset(){
         type:Math.floor(Math.random()*7),
     }
     now_matrix.matrix=matrix_prototype[now_matrix.type];
-    let abc=Math.floor(Math.random()*2+1);
     for(let y=0;y<now_matrix.matrix.length;y++){
         for(let x=0;x<now_matrix.matrix.length;x++){
             if(now_matrix.matrix[y][x]!=0){
-                now_matrix.matrix[y][x]=abc;
+                now_matrix.matrix[y][x]=Math.floor(Math.random()*2+1);
             }
         }
     }
@@ -408,6 +403,7 @@ function update(){
     drawMatrix(now_matrix);
     window.requestAnimationFrame(update); 
 }
-gameStart();
-update();
+module.exports =gameStart();
+
+
 
