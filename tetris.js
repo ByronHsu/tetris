@@ -15,8 +15,8 @@ let color = [
 ]
 let matrix_prototype =[
     [
-        [1,1,1,1],
         [0,0,0,0],
+        [1,1,1,1],
         [0,0,0,0],
         [0,0,0,0],
     ],
@@ -50,155 +50,7 @@ let matrix_prototype =[
         [0,0,0],
     ]
 ]
-function drawArena(){
-    context.fillStyle='#202028';
-    context.fillRect(0,0,24,40);
-    for(let i=0;i<arena.length;i++){
-        for(let j=0;j<arena[i].length;j++){
-            if(arena[i][j]!=0){
-                context.beginPath();
-                context.lineWidth="0.1";
-                context.strokeStyle="black";
-                context.rect(j,i,1,1);
-                context.stroke();
-                context.fillStyle=color[arena[i][j]];
-                context.fillRect(j,i,1,1);
-                /*
-                context.font="1px Arial";
-                context.fillStyle='black';
-                context.fillText(`${arena[i][j]}`,j+0.2,i+0.85);
-                */
-            }
-        }
-    }
-}
-function drawMatrix(now_matrix){
-    let matrix = now_matrix.matrix;
-    for(let i=0;i<matrix.length;i++){
-        for(let j=0;j<matrix[i].length;j++){
-            if(matrix[i][j]!=0){
-                context.beginPath();
-                context.lineWidth="0.1";
-                context.strokeStyle="black";
-                context.rect(j+now_matrix.offset.x,i+now_matrix.offset.y,1,1);
-                context.stroke();
-                context.fillStyle=color[matrix[i][j]];
-                context.fillRect(j+now_matrix.offset.x,i+now_matrix.offset.y,1,1);
-                /*
-                context.font="1px Arial";
-                context.fillStyle='black';
-                context.fillText(`${matrix[i][j]}`,j+now_matrix.offset.x+0.2,i+now_matrix.offset.y+0.85);
-                */
-            }
-        }
-    }
-}
-function collideBottom(now_matrix){
-    let matrix = now_matrix.matrix;
-    for(let i=0;i<matrix.length;i++){
-        for(let j=0;j<matrix[i].length;j++){
-            if(matrix[i][j]!=0){
-                if(i+now_matrix.offset.y>=19){
-                    return true;
-                }else
-                if(arena[i+now_matrix.offset.y+1][j+now_matrix.offset.x]!=0){
-                    return true;
-                }
-            }
-        }
-    }
-    return false
-}
-function collideRight(now_matrix){
-    let matrix = now_matrix.matrix;
-    for(let i=0;i<matrix.length;i++){
-        for(let j=0;j<matrix[i].length;j++){
-            if(matrix[i][j]!=0){
-                if(j+now_matrix.offset.x>=11){
-                    return true;
-                }else
-                if(arena[i+now_matrix.offset.y][j+now_matrix.offset.x+1]!=0){
-                    return true;
-                }
-            }
-        }
-    }
-    return false
-}
-function collideLeft(now_matrix){
-    let matrix = now_matrix.matrix;
-    for(let i=0;i<matrix.length;i++){
-        for(let j=0;j<matrix[i].length;j++){
-            if(matrix[i][j]!=0){
-                if(j+now_matrix.offset.x<=0){
-                    return true;
-                }else
-                if(arena[i+now_matrix.offset.y][j+now_matrix.offset.x-1]!=0){
-                    return true;
-                }
-            }
-        }
-    }
-    return false
-}
-function rotate(dir,now_matrix){
-    //dir==1 right dir=-1 left
-    let matrix = now_matrix.matrix;;
-    let tem = matrix.map( (arr) => {
-        return arr.slice();
-    });
-    for(let i=0;i<matrix.length;i++){
-        for(let j=0;j<matrix[i].length;j++){
-            tem[j][i]=matrix[i][j];
-        }
-    }
-    if(dir===1){
-        for(let i=0;i<matrix.length;i++){
-            for(let j=0;j<Math.floor(matrix[i].length/2);j++){
-                [tem[i][j],tem[i][matrix[i].length-j-1]]=[tem[i][matrix[i].length-j-1],tem[i][j]];
-            }
-        }
-    }else{
-        for(let i=0;i<Math.floor(matrix.length/2);i++){
-            for(let j=0;j<matrix[i].length;j++){
-                [tem[i][j],tem[matrix.length-i-1][j]]=[tem[matrix.length-i-1][j],tem[i][j]];
-            }
-        }
-    }
-    now_matrix.matrix = tem;
-    let x=0;
-    while(collideLeft(now_matrix)===true){
-        now_matrix.offset.x++;
-        x=1;
-    }
-    if(x)
-        now_matrix.offset.x--;
-    x=0;
-    while(collideRight(now_matrix)===true){
-        now_matrix.offset.x--;
-        x=1;
-    }
-    if(x)
-        now_matrix.offset.x++;
-    x=0;
-    while(collideBottom(now_matrix)===true){
-        now_matrix.offset.y--;
-        x=1;
-    }
-    if(x)
-        now_matrix.offset.y++;
-}
 
-function merge(arena,now_matrix){
-    let matrix = now_matrix.matrix;
-    for(let i=0;i<matrix.length;i++){
-        for(let j=0;j<matrix[i].length;j++){
-            if(matrix[i][j]!=0){
-                arena[i+now_matrix.offset.y][j+now_matrix.offset.x]=matrix[i][j];
-            }
-        }
-    }
-}
 let x=[1,0,-1,0];
 let y=[0,1,0,-1];
 function initialVisit(){
@@ -337,72 +189,180 @@ function copyBfs(){
     }
     console.log('1');
 }
-let count=0;
-function update(){
-    count++;
-    if(count==40){
-        if(!collideBottom(now_matrix)){
-            now_matrix.offset.y++;
-            drawArena();
-            drawMatrix(now_matrix);
+function drawArena(){
+    context.fillStyle='#202028';
+    context.fillRect(0,0,24,40);
+    for(let i=0;i<arena.length;i++){
+        for(let j=0;j<arena[i].length;j++){
+            if(arena[i][j]!=0){
+                context.beginPath();
+                context.lineWidth="0.1";
+                context.strokeStyle="black";
+                context.rect(j,i,1,1);
+                context.stroke();
+                context.fillStyle=color[arena[i][j]];
+                context.fillRect(j,i,1,1);
+                /*
+                context.font="1px Arial";
+                context.fillStyle='black';
+                context.fillText(`${arena[i][j]}`,j+0.2,i+0.85);
+                */
+            }
         }
-        else{
+    }
+}
+function drawMatrix(now_matrix){
+    let matrix = now_matrix.matrix;
+    for(let i=0;i<matrix.length;i++){
+        for(let j=0;j<matrix[i].length;j++){
+            if(matrix[i][j]!=0){
+                context.beginPath();
+                context.lineWidth="0.1";
+                context.strokeStyle="black";
+                context.rect(j+now_matrix.offset.x,i+now_matrix.offset.y,1,1);
+                context.stroke();
+                context.fillStyle=color[matrix[i][j]];
+                context.fillRect(j+now_matrix.offset.x,i+now_matrix.offset.y,1,1);
+                /*
+                context.font="1px Arial";
+                context.fillStyle='black';
+                context.fillText(`${matrix[i][j]}`,j+now_matrix.offset.x+0.2,i+now_matrix.offset.y+0.85);
+                */
+            }
+        }
+    }
+}
+///////////
+function playerFall(){
+    while(1){
+        now_matrix.offset.y++;
+        if (collide(arena, now_matrix)) {
+            now_matrix.offset.y--;
             merge(arena,now_matrix);
-            drawArena();
             initialVisit();
             clean();
             gameReset();
+            break;
         }
-        count=0;
     }
-    window.requestAnimationFrame(update); 
+    count = 0;
 }
-
+function playerDrop() {
+    now_matrix.offset.y++;
+    if (collide(arena, now_matrix)) {
+        now_matrix.offset.y--;
+        merge(arena,now_matrix);
+        initialVisit();
+        clean();
+        gameReset();
+    }
+    count = 0;
+}
+function playerMove(dir) {
+    now_matrix.offset.x += dir;
+    if (collide(arena, now_matrix)) {
+        now_matrix.offset.x -= dir;
+    }
+}
+function collide(arena, now_matrix) {
+    const m = now_matrix.matrix;
+    const o = now_matrix.offset;
+    for (let y = 0; y < m.length; ++y) {
+        for (let x = 0; x < m[y].length; ++x) {
+            if (m[y][x] !== 0 &&
+               (arena[y + o.y] &&
+                arena[y + o.y][x + o.x]) !== 0) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+function playerRotate(dir) {
+    const tem = now_matrix.offset.x;
+    let offset = 1;
+    rotate(dir,now_matrix);
+    while (collide(arena, now_matrix)) {
+        now_matrix.offset.x += offset;
+        offset = -(offset + (offset > 0 ? 1 : -1));
+        if (offset > now_matrix.matrix[0].length) {
+            rotate( -dir,now_matrix);
+            now_matrix.offset.x = tem;
+            return;
+        }
+    }
+    tem = now_matrix.offset.y;
+    offset = 1;
+    while (collide(arena, now_matrix)) {
+        now_matrix.offset.y += offset;
+        offset = -(offset + (offset > 0 ? 1 : -1));
+        if (offset > now_matrix.matrix[0].length) {
+            rotate( -dir,now_matrix);
+            now_matrix.offset.y = tem;
+            return;
+        }
+    }
+}
+//////////
 document.addEventListener('keydown',event =>{
         if(event.keyCode === 39){//right
-            if(!collideRight(now_matrix))
-            now_matrix.offset.x++;
-            drawArena();
-            drawMatrix(now_matrix);
+            playerMove(1);
         }else
         if(event.keyCode === 37){
-            if(!collideLeft(now_matrix))
-            now_matrix.offset.x--;
-            drawArena();
-            drawMatrix(now_matrix);
+            playerMove(-1);
         }else
         if(event.keyCode === 40){
-            if(!collideBottom(now_matrix))
-            now_matrix.offset.y++;
-            drawArena();
-            drawMatrix(now_matrix);
-            count=0;
+            playerDrop();
         }else
         if(event.keyCode === 69){
-            rotate(1,now_matrix);
-            drawArena();
-            drawMatrix(now_matrix);
+            playerRotate(1);
         }else
         if(event.keyCode === 81){
-            rotate(-1,now_matrix);
-            drawArena();
-            drawMatrix(now_matrix);
+            playerRotate(-1);
         }else
         if(event.keyCode === 32){
-            while(!collideBottom(now_matrix)){
-                now_matrix.offset.y++;
-                drawArena();
-                drawMatrix(now_matrix);
-            }
-            merge(arena,now_matrix);
-            drawArena();
-            initialVisit();
-            clean();
-            gameReset();
-            count=0;
+            playerFall();
         }
     }
 );
+function rotate(dir,now_matrix){
+    //dir==1 right dir=-1 left
+    let matrix = now_matrix.matrix;
+    let tem = matrix.map( (arr) => {
+        return arr.slice();
+    });
+    for(let i=0;i<matrix.length;i++){
+        for(let j=0;j<matrix[i].length;j++){
+            tem[j][i]=matrix[i][j];
+        }
+    }
+    if(dir===1){
+        for(let i=0;i<matrix.length;i++){
+            for(let j=0;j<Math.floor(matrix[i].length/2);j++){
+                [tem[i][j],tem[i][matrix[i].length-j-1]]=[tem[i][matrix[i].length-j-1],tem[i][j]];
+            }
+        }
+    }else{
+        for(let i=0;i<Math.floor(matrix.length/2);i++){
+            for(let j=0;j<matrix[i].length;j++){
+                [tem[i][j],tem[matrix.length-i-1][j]]=[tem[matrix.length-i-1][j],tem[i][j]];
+            }
+        }
+    }
+    now_matrix.matrix = tem;
+}
+
+function merge(arena,now_matrix){
+    let matrix = now_matrix.matrix;
+    for(let i=0;i<matrix.length;i++){
+        for(let j=0;j<matrix[i].length;j++){
+            if(matrix[i][j]!=0){
+                arena[i+now_matrix.offset.y][j+now_matrix.offset.x]=matrix[i][j];
+            }
+        }
+    }
+}
+
 let now_matrix;
 let arena=[],visit=[],bfs=[];
 function gameStart(){
@@ -425,10 +385,11 @@ function gameReset(){
         type:Math.floor(Math.random()*7),
     }
     now_matrix.matrix=matrix_prototype[now_matrix.type];
+    let abc=Math.floor(Math.random()*2+1);
     for(let y=0;y<now_matrix.matrix.length;y++){
         for(let x=0;x<now_matrix.matrix.length;x++){
             if(now_matrix.matrix[y][x]!=0){
-                now_matrix.matrix[y][x]=Math.floor(Math.random()*2+1);
+                now_matrix.matrix[y][x]=abc;
             }
         }
     }
@@ -436,7 +397,17 @@ function gameReset(){
     let range = 11-now_matrix.matrix.length;
     now_matrix.offset={x:Math.floor(Math.random()*range),y:0};
 }
-
+let count=0;
+function update(){
+    count++;
+    if(count==40){
+        playerDrop();
+        count=0;
+    }
+    drawArena();
+    drawMatrix(now_matrix);
+    window.requestAnimationFrame(update); 
+}
 gameStart();
 update();
 
