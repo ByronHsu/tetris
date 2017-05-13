@@ -1,6 +1,6 @@
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
-context.scale(20,20);
+//context.scale(20,20);
 // ---------x
 // |
 // |
@@ -100,7 +100,7 @@ function clean(){
                             for(let xx=0;xx<12;xx++)
                                 bfs[yy][xx]=0,visit[yy][xx]=0;
                         for(let yy=19;yy>=0;yy--){
-                            for(let xx=0;xx<12;xx++){
+                            for(let xx=0,tt=0;tt<24;xx=(xx+1)%12,tt++ ){
 
                                 for(let yyy=0;yyy<20;yyy++) 
                                     for(let xxx=0;xxx<12;xxx++)
@@ -234,6 +234,8 @@ function playerFall(){
         now_matrix.offset.y++;
         if (collide(arena, now_matrix)) {
             now_matrix.offset.y--;
+            if(collide(arena, now_matrix))
+                {died=1;return;}
             merge(arena,now_matrix);
             initialVisit();
             clean();
@@ -247,6 +249,8 @@ function playerDrop() {
     now_matrix.offset.y++;
     if (collide(arena, now_matrix)) {
         now_matrix.offset.y--;
+        if(collide(arena, now_matrix))
+            {died=1;return;}
         merge(arena,now_matrix);
         initialVisit();
         clean();
@@ -358,10 +362,58 @@ function merge(arena,now_matrix){
         }
     }
 }
+let died;
 let now_matrix;
+let count;
 let arena=[],visit=[],bfs=[];
+
 function gameStart(){
     //set arena
+    died=0;
+    count=0;
+    for(let i = 0; i < 20 ; i++) {
+        for(let j=0; j<12; j++){
+            arena[i][j]=0;
+            visit[i][j]=0;
+            bfs[i][j]=0;
+        }
+    }
+    gameReset();
+    update();
+}
+
+function gameReset(){
+    now_matrix={
+        type:Math.floor(Math.random()*7),
+    }
+    now_matrix.matrix=matrix_prototype[now_matrix.type];
+    let abc=Math.floor(Math.random()*2+1);
+    for(let y=0;y<now_matrix.matrix.length;y++){
+        for(let x=0;x<now_matrix.matrix.length;x++){
+            if(now_matrix.matrix[y][x]!=0){
+                now_matrix.matrix[y][x]=abc;
+            }
+        }
+    }
+    
+    let range = 11-now_matrix.matrix.length;
+    now_matrix.offset={x:Math.floor(Math.random()*range),y:0};
+}
+
+
+function update(){
+    count++;
+    if(count==40){
+        playerDrop();
+        count=0;
+    }
+    if(died===1)
+        return;
+    drawArena();
+    drawMatrix(now_matrix);
+    window.requestAnimationFrame(update); 
+}
+function gameInit(){
     for(let i = 0; i < 20 ; i++) {
             arena.push([]);
             visit.push([]);
@@ -372,38 +424,7 @@ function gameStart(){
             bfs[i].push(0);
         }
     }
-    gameReset();
-    update();
 }
-let resetcnt=0;
-function gameReset(){
-    now_matrix={
-        type:Math.floor(Math.random()*7),
-    }
-    now_matrix.matrix=matrix_prototype[now_matrix.type];
-    for(let y=0;y<now_matrix.matrix.length;y++){
-        for(let x=0;x<now_matrix.matrix.length;x++){
-            if(now_matrix.matrix[y][x]!=0){
-                now_matrix.matrix[y][x]=Math.floor(Math.random()*2+1);
-            }
-        }
-    }
-    
-    let range = 11-now_matrix.matrix.length;
-    now_matrix.offset={x:Math.floor(Math.random()*range),y:0};
-}
-let count=0;
-function update(){
-    count++;
-    if(count==40){
-        playerDrop();
-        count=0;
-    }
-    drawArena();
-    drawMatrix(now_matrix);
-    window.requestAnimationFrame(update); 
-}
-module.exports =gameStart();
-
+export  {gameInit,gameStart};
 
 
