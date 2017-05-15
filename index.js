@@ -7,14 +7,6 @@ context.scale(20,20);
 function init(){
     context.fillStyle='black';
     context.fillRect(0,0,24,40);
-/*
-    context.fillStyle='white';
-    context.beginPath();
-    context.lineWidth="0.1";
-    context.strokeStyle="white";
-    context.rect(0,0,10,10);
-    context.stroke();
-*/
     context.font="0.8px Arial";
     context.fillStyle='white';
     context.fillText('press enter to continue...',1.6,10);
