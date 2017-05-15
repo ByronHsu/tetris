@@ -101,7 +101,6 @@ function clean(){
                                 bfs[yy][xx]=0,visit[yy][xx]=0;
                         for(let yy=19;yy>=0;yy--){
                             for(let xx=0,tt=0;tt<24;xx=(xx+1)%12,tt++ ){
-
                                 for(let yyy=0;yyy<20;yyy++) 
                                     for(let xxx=0;xxx<12;xxx++)
                                         bfs[yyy][xxx]=0;
@@ -387,11 +386,11 @@ function gameReset(){
         type:Math.floor(Math.random()*7),
     }
     now_matrix.matrix=matrix_prototype[now_matrix.type];
-    let abc=Math.floor(Math.random()*2+1);
+    //let abc=Math.floor(Math.random()*2+1);
     for(let y=0;y<now_matrix.matrix.length;y++){
         for(let x=0;x<now_matrix.matrix.length;x++){
             if(now_matrix.matrix[y][x]!=0){
-                now_matrix.matrix[y][x]=abc;
+                now_matrix.matrix[y][x]=Math.floor(Math.random()*2+1);
             }
         }
     }
