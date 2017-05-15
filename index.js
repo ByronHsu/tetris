@@ -1,10 +1,8 @@
 import {gameInit,gameStart} from './tetris'
-
-let canvas = document.getElementById('tetris');
-let context = canvas.getContext('2d');
+const canvas = document.getElementById('tetris');
+const context = canvas.getContext('2d');
 context.scale(20,20);
 
-console.log(gameStart);
 
 function init(){
     context.fillStyle='black';

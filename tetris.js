@@ -1,6 +1,5 @@
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
-//context.scale(20,20);
 // ---------x
 // |
 // |
@@ -92,6 +91,7 @@ function clean(){
                         for(let xx=0;xx<=11;xx++){
                             for(let yy=0;yy<=19;yy++){
                                 if(bfs[yy][xx]===1){
+                                    score++;
                                     arena[yy][xx]=0;
                                 }
                             }
@@ -99,12 +99,13 @@ function clean(){
                         for(let yy=0;yy<20;yy++) 
                             for(let xx=0;xx<12;xx++)
                                 bfs[yy][xx]=0,visit[yy][xx]=0;
+                        let apple=0;
+                        inner:
                         for(let yy=19;yy>=0;yy--){
-                            for(let xx=0,tt=0;tt<24;xx=(xx+1)%12,tt++ ){
+                            for(let xx=0;xx<12;xx++){
                                 for(let yyy=0;yyy<20;yyy++) 
                                     for(let xxx=0;xxx<12;xxx++)
                                         bfs[yyy][xxx]=0;
-
                                 if(!visit[yy][xx]&&arena[yy][xx]!=0){
                                     let n_color=arena[yy][xx];
                                     let q=[],st={y:yy,x:xx};
@@ -125,9 +126,15 @@ function clean(){
                                             }
                                         }
                                     }
-                                    copyBfs();
+                                    let B=copyBfs();
+                                    if(B!=0)
+                                        apple=B;
                                     drawArena();
                                 }
+                            }
+                            if(yy===0&&apple!=0){
+                                apple=0;
+                                continue inner;
                             }
                         }
                         initialVisit();
@@ -183,8 +190,10 @@ function copyBfs(){
             }
         }
     }
+    return cnt;
 }
 function drawArena(){
+    document.getElementById("score").innerHTML=`${score*10}`;
     context.fillStyle='#202028';
     context.fillRect(0,0,24,40);
     for(let i=0;i<arena.length;i++){
@@ -364,12 +373,14 @@ function merge(arena,now_matrix){
 let died;
 let now_matrix;
 let count;
+let score;
 let arena=[],visit=[],bfs=[];
 
 function gameStart(){
     //set arena
     died=0;
     count=0;
+    score=0;
     for(let i = 0; i < 20 ; i++) {
         for(let j=0; j<12; j++){
             arena[i][j]=0;
