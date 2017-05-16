@@ -1,5 +1,6 @@
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
+import {UserName} from './fb'
 // ---------x
 // |
 // |
@@ -322,10 +323,10 @@ document.addEventListener('keydown',event =>{
         if(event.keyCode === 40){
             playerDrop();
         }else
-        if(event.keyCode === 69){
+        if(event.keyCode === 38||event.keyCode === 90){
             playerRotate(1);
         }else
-        if(event.keyCode === 81){
+        if(event.keyCode === 88){
             playerRotate(-1);
         }else
         if(event.keyCode === 32){
@@ -417,8 +418,10 @@ function update(){
         playerDrop();
         count=0;
     }
-    if(died===1)
+    if(died===1){
+        console.log(UserName+' '+score);
         return;
+    }
     drawArena();
     drawMatrix(now_matrix);
     window.requestAnimationFrame(update); 
