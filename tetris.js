@@ -1,6 +1,8 @@
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
 import {UserName} from './fb'
+import 'babel-polyfill';
+import fetch from 'isomorphic-fetch';
 // ---------x
 // |
 // |
@@ -419,7 +421,18 @@ function update(){
         count=0;
     }
     if(died===1){
-        console.log(UserName+' '+score);
+        let data={
+            name:UserName,
+            score:score*10,
+        }
+        fetch(`/api/board`, {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
         return;
     }
     drawArena();

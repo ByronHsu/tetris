@@ -26,6 +26,7 @@ function statusChangeCallback(response){
   }
 function didLogin(){
     window.FB.api('/me', (res) => {
+        login=1;
         UserName=res.name;
         document.getElementsByClassName('fb-login-button')[0].style.display='none';
         document.getElementById('hello').style.display='inline-block';
@@ -33,7 +34,9 @@ function didLogin(){
     });
 }
 function didNotLogin (){
+        login=0;
         document.getElementsByClassName('fb-login-button')[0].style.display='inline-block';
 }
 let UserName;
-export {UserName};
+let login=0;
+export {UserName,login};
